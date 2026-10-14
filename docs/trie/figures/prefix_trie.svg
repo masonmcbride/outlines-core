@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="225" viewBox="0 0 760 225" role="img" aria-labelledby="title desc">
+<title id="title">Three tokens share the prefix return</title>
+<desc id="desc">An illustrative byte trie for return, returned, and returns, with nine edges rather than twenty-one repeated byte visits.</desc>
+<style>text{font-family:monospace;font-size:15px;fill:#263746}.edge{stroke:#778b99;stroke-width:2;fill:none}.node{fill:#fff;stroke:#778b99;stroke-width:2}.terminal{fill:#d5e7f0;stroke:#246b8f;stroke-width:2}</style>
+<rect width="760" height="225" fill="white"/>
+<path class="edge" d="M50 100H390M390 100L450 40H510M390 100L450 165"/>
+<g class="node"><circle cx="50" cy="100" r="8"/><circle cx="105" cy="100" r="8"/><circle cx="160" cy="100" r="8"/><circle cx="215" cy="100" r="8"/><circle cx="270" cy="100" r="8"/><circle cx="325" cy="100" r="8"/><circle cx="450" cy="40" r="8"/></g>
+<g class="terminal"><circle cx="390" cy="100" r="8"/><circle cx="510" cy="40" r="8"/><circle cx="450" cy="165" r="8"/></g>
+<text x="32" y="128">root</text><text x="76" y="88">r</text><text x="132" y="88">e</text><text x="187" y="88">t</text><text x="242" y="88">u</text><text x="296" y="88">r</text><text x="353" y="88">n</text><text x="410" y="57">e</text><text x="476" y="28">d</text><text x="410" y="146">s</text>
+<text x="525" y="45">returned</text><text x="464" y="170">returns</text><text x="350" y="125">return</text>
+<text x="50" y="210" font-size="13">Illustration: 21 separate byte visits become 9 shared-prefix edges.</text>
+</svg>

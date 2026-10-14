@@ -1,0 +1,122 @@
+{
+  "timestamp_utc": "2026-10-14T03:16:58.642905+00:00",
+  "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+  "cpu_model": "12th Gen Intel(R) Core(TM) i7-12700K",
+  "logical_cpus": 20,
+  "original_affinity": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "benchmark_affinity": [
+    0
+  ],
+  "samples_per_variant_per_case": 21,
+  "compiler": "rustc 1.90.0 (1159e78c4 2025-09-14)\nbinary: rustc\ncommit-hash: 1159e78c4747b02ef996e55082b704c09b970588\ncommit-date: 2025-09-14\nhost: x86_64-unknown-linux-gnu\nrelease: 1.90.0\nLLVM version: 20.1.8\n",
+  "upstream_commit": "116a7c381b446814fdfc9b2b28bea7ca4f900aae",
+  "cpu_quota": "max 100000",
+  "limits": "One machine; shared host; no frequency locking; constructor timings, not inference throughput; no GPU or neural model.",
+  "checks": [
+    {
+      "command": [
+        "/usr/bin/python3",
+        "investigation/prepare_vocab.py"
+      ],
+      "exit_code": 0,
+      "log": "prepare-vocab.log"
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "-m",
+        "unittest",
+        "investigation.test_prepare_vocab"
+      ],
+      "exit_code": 0,
+      "log": "normalization-tests.log"
+    },
+    {
+      "command": [
+        "/home/mason/.cargo/bin/cargo",
+        "+1.90.0",
+        "fmt",
+        "--check"
+      ],
+      "exit_code": 0,
+      "log": "format.log"
+    },
+    {
+      "command": [
+        "/home/mason/.cargo/bin/cargo",
+        "+1.90.0",
+        "test",
+        "--offline",
+        "--locked",
+        "--no-default-features",
+        "--features",
+        "trie-experiment",
+        "--lib",
+        "--test",
+        "trie_equivalence"
+      ],
+      "exit_code": 0,
+      "log": "tests.log"
+    },
+    {
+      "command": [
+        "/home/mason/.cargo/bin/cargo",
+        "+1.90.0",
+        "clippy",
+        "--offline",
+        "--locked",
+        "--no-default-features",
+        "--features",
+        "trie-experiment",
+        "--lib",
+        "--test",
+        "trie_equivalence",
+        "--example",
+        "trie_benchmark",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "log": "clippy.log"
+    },
+    {
+      "command": [
+        "/home/mason/.cargo/bin/cargo",
+        "+1.90.0",
+        "build",
+        "--release",
+        "--offline",
+        "--locked",
+        "--no-default-features",
+        "--features",
+        "trie-experiment",
+        "--example",
+        "trie_benchmark"
+      ],
+      "exit_code": 0,
+      "log": "release-build.log"
+    }
+  ]
+}

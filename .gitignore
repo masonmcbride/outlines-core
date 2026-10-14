@@ -21,3 +21,10 @@ docs/build
 logs
 rust-coverage
 target
+
+# Local experiment outputs
+reruns/
+.mpl-cache/
+!Cargo.lock
+
+.build-check/

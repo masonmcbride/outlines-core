@@ -1,0 +1,29 @@
+{
+  "upstream": "https://github.com/dottxt-ai/outlines-core",
+  "upstream_commit": "116a7c381b446814fdfc9b2b28bea7ca4f900aae",
+  "status": "Experimental Rust optimization; measured index construction; no upstream acceptance or Python integration claimed",
+  "patch_sha256": "183016fc448b6451b1156d9c74f236fbf62b5fdc81e46f8a565f28ce0e919715",
+  "benchmark_binary_sha256": "418dd434e7b37b600e81ec97e462160e05a300dcb58c1b70316a7e25e7cbe142",
+  "rust_source_sha256": {
+    "Cargo.toml": "fc8f832f19fae87cf0f8c04ebb9e36fc0ea601816ae4f49f4890c29691d8ee48",
+    "Cargo.lock": "3f1313e3b3042fa13e382385b6b03c9229bf08ff4aacd6bd34c2af6a52679b0b",
+    "src/index.rs": "9fd56a953ebbe53c768adb17a0a024de762e8e19699e52451ea624e389c645aa",
+    "src/index/trie.rs": "d17f9940c6f994e7a0c57b708180e882322421ed2629e486a8d534eaaaed37d6",
+    "examples/trie_benchmark.rs": "1888f72e7bc66b59c14e7ea1b392a4423db8cf44aef878edd5960f3ee083d363",
+    "tests/trie_equivalence.rs": "1b773ad53bc64877ff9770dfd12f6ba82dcce26d3614d0865fd5a3dd76761eb8"
+  },
+  "measurements_sha256": {
+    "data/environment.json": "9d54487260a814c42fd718aa7c3ae7bfacf6a8b466568fd1b4988771aba21074",
+    "data/gpt2-repeat.json": "977f783751a1dafc4f2832ef1c98e442edd8b8b3d17e673928327a6f177fbc09",
+    "data/gpt2.json": "4e8d7f737512524459f8610fc5070f2e0bf2f7aa2b30d234e029ac0aaec23041",
+    "data/qwen-repeat.json": "473424c10b46dddb7f7c616ba814686f110a1ba76545c21fd85c6b65dc2a6538",
+    "data/qwen.json": "bd19ad4097e57bda218556df2b87e05ec33a9963b5ce3250573a75e1ef08f5f8",
+    "data/repeat-environment.json": "119655faab4ce820cc70937520ebd8f329525024590ae2ceae29694aa066421a",
+    "data/summary.json": "7926cb1bb07f90bb5fdd5ceaef179d89c2e8c22621450d70d4746881f3f94658",
+    "data/synthetic.json": "665be7d4cda7b027835caad8771173609a077fc39e2d1eb2fa9eefd7fcbe8c7d"
+  },
+  "compressed_tokenizers_sha256": {
+    "vocab/gpt2-tokenizer.json.gz": "9932347f8f19e9566a3369744262d8a23bb517dfd8722050968a237f8fa10da9",
+    "vocab/qwen-tokenizer.json.gz": "18d2808753bd377cdf63c8872ba1a968139be03229417c468184b38ba477e2e0"
+  }
+}

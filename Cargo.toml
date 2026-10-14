@@ -32,6 +32,7 @@ features = ["onig"]
 default-features = false
 
 [features]
+trie-experiment = []
 default = ["hugginface-hub"]
 python-bindings = ["pyo3", "pyo3/generate-import-lib", "serde-pyobject"]
 hugginface-hub = ["hf-hub", "tokenizers/http",  "tokenizers/rustls-tls"]
@@ -54,3 +55,7 @@ unexpected_cfgs = { level = "warn", check-cfg = ['cfg(tarpaulin_include)'] }
 name = "convert-json-schema"
 test = false
 bench = false
+
+[[example]]
+name = "trie_benchmark"
+required-features = ["trie-experiment"]

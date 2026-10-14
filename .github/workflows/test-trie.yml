@@ -1,0 +1,24 @@
+name: Check trie experiment
+on:
+  workflow_dispatch:
+  push:
+    branches: [trie-prefix-sharing]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Rust
+        run: rustup toolchain install 1.90.0 --profile minimal --component rustfmt --component clippy
+      - name: Check implementation and tests
+        run: |
+          cargo +1.90.0 fmt --check
+          cargo +1.90.0 test --locked --no-default-features --features trie-experiment --lib --test trie_equivalence
+          cargo +1.90.0 clippy --locked --no-default-features --features trie-experiment --lib --test trie_equivalence --example trie_benchmark -- -D warnings
+      - name: Check published evidence
+        run: |
+          python3 -m unittest docs.trie.test_prepare_vocab
+          python3 docs/trie/check_artifacts.py

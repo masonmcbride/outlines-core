@@ -1,3 +1,8 @@
+> **Vocabulary prefix-sharing experiment:** [Read the explanation](https://masonmcbride.github.io/outlines-core/) · [Notebook](docs/trie/Prefix_Sharing.ipynb) · [Implementation](src/index/trie.rs) · [Tests](tests/trie_equivalence.rs)
+>
+> This fork adds an opt-in trie experiment on branch `trie-prefix-sharing`.
+> The original constructor remains the default. Measurements concern Rust index construction.
+
 <div align="center" style="margin-bottom: 1em;">
 
 <img src="./docs/assets/images/logo.png" alt="Outlines-core Logo" width=500></img>

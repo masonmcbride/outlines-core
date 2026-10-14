@@ -1,0 +1,28 @@
+name: Publish trie explanation
+on:
+  workflow_dispatch:
+  push:
+    branches: [trie-prefix-sharing]
+    paths: ['docs/trie/**', '.github/workflows/publish-trie.yml']
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: trie-pages
+  cancel-in-progress: true
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/trie
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

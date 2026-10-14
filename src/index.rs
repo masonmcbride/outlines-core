@@ -11,6 +11,11 @@ use crate::prelude::*;
 use crate::vocabulary::Vocabulary;
 use crate::{Error, Result};
 
+#[cfg(feature = "trie-experiment")]
+mod trie;
+#[cfg(feature = "trie-experiment")]
+pub use trie::{TrieWork, VocabularyTrie};
+
 /// `Index` efficiently maps vocabulary tokens to state transitions.
 #[derive(Clone, Debug, PartialEq, Encode, Decode)]
 pub struct Index {

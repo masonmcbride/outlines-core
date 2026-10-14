@@ -9,13 +9,17 @@ HERE=Path(__file__).resolve().parent
 ROOT=HERE.parents[1]
 p=json.loads((HERE/'SOURCE_PROVENANCE.json').read_text())
 for name,digest in p['rust_source_sha256'].items():
-    assert hashlib.sha256((ROOT/name).read_bytes()).hexdigest()==digest,name
+    raw=(ROOT/name).read_bytes() if (ROOT/name).exists() else gzip.decompress((HERE/'data/Cargo.lock.gz').read_bytes())
+    assert hashlib.sha256(raw).hexdigest()==digest,name
 for name,digest in p['measurements_sha256'].items():
     assert hashlib.sha256((HERE/name).read_bytes()).hexdigest()==digest,name
 for name,digest in p['compressed_tokenizers_sha256'].items():
     assert hashlib.sha256((HERE/name).read_bytes()).hexdigest()==digest,name
-for name in ['gpt2','qwen','synthetic','gpt2-repeat','qwen-repeat']:
-    d=json.loads((HERE/f'data/{name}.json').read_text())
+assert hashlib.sha256((HERE/'data/Cargo.lock.gz').read_bytes()).hexdigest()==p['compressed_lockfile_sha256']
+for name,digest in p['uncompressed_measurements_sha256'].items():
+    assert hashlib.sha256(gzip.decompress((HERE/name).read_bytes())).hexdigest()==digest,name
+for name in ['gpt2','qwen','synthetic']:
+    d=json.loads(gzip.decompress((HERE/f'data/{name}.json.gz').read_bytes()))
     assert len(d['cases'])==6
     for c in d['cases']:
         assert c['exact_index_equality']
@@ -41,4 +45,4 @@ import subprocess
 original=subprocess.check_output(['git','show',base+':src/index.rs'],cwd=ROOT,text=True)
 addition='#[cfg(feature = "trie-experiment")]\nmod trie;\n#[cfg(feature = "trie-experiment")]\npub use trie::{TrieWork, VocabularyTrie};\n\n'
 assert (ROOT/'src/index.rs').read_text().replace(addition,'',1)==original
-print('Five datasets, source hashes, unchanged baseline, exact excerpt, and three executed cells passed')
+print('Three primary datasets, source hashes, unchanged baseline, exact excerpt, and three executed cells passed')

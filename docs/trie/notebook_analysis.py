@@ -35,7 +35,7 @@ def plot_results(datasets, root):
         axis.set_axisbelow(True)
         axis.spines[['top','right']].set_visible(False)
     fig.suptitle('Qwen vocabulary · preparation changes the answer',x=.03,ha='left')
-    for extension in ['png','svg']:
+    for extension in ['png']:
         fig.savefig(root/f'figures/preparation.{extension}',dpi=160)
     plt.close(fig)
     display(Image(filename=str(root/'figures/preparation.png')))

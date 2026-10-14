@@ -15,6 +15,7 @@ jobs:
         run: rustup toolchain install 1.90.0 --profile minimal --component rustfmt --component clippy
       - name: Check implementation and tests
         run: |
+          python3 docs/trie/prepare_vocab.py --lock-only
           cargo +1.90.0 fmt --check
           cargo +1.90.0 test --locked --no-default-features --features trie-experiment --lib --test trie_equivalence
           cargo +1.90.0 clippy --locked --no-default-features --features trie-experiment --lib --test trie_equivalence --example trie_benchmark -- -D warnings

@@ -25,6 +25,8 @@ target
 # Local experiment outputs
 reruns/
 .mpl-cache/
-!Cargo.lock
 
 .build-check/
+
+# Generated reading checks
+docs/trie/.render-check.json

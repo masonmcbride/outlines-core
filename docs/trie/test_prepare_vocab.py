@@ -6,7 +6,7 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from docs.trie.prepare_vocab import byte_decoder, normalize
+from docs.trie.prepare_vocab import byte_decoder, normalize, restore_lockfile
 
 
 class ByteVocabularyTests(unittest.TestCase):
@@ -36,6 +36,22 @@ class ByteVocabularyTests(unittest.TestCase):
             self.assertEqual(result["eos_token_id"], 1000)
             self.assertTrue(any(t["bytes"] == list(b" hello") and t["ids"] == [256] for t in result["tokens"]))
             self.assertFalse(any(1000 in t["ids"] for t in result["tokens"]))
+
+
+class LockfileTests(unittest.TestCase):
+    def test_pinned_lockfile_restores_exactly_and_protects_changes(self):
+        import gzip
+        here = Path(__file__).resolve().parent
+        expected = gzip.decompress((here / "data/Cargo.lock.gz").read_bytes())
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            restore_lockfile(root)
+            self.assertEqual((root / "Cargo.lock").read_bytes(), expected)
+            restore_lockfile(root)
+            (root / "Cargo.lock").write_text("changed")
+            with self.assertRaisesRegex(ValueError, "changed Cargo.lock"):
+                restore_lockfile(root)
+            self.assertEqual((root / "Cargo.lock").read_text(), "changed")
 
 
 if __name__ == "__main__":

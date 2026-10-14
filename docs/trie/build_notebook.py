@@ -4,7 +4,7 @@ from pathlib import Path
 import textwrap
 import nbformat as nb
 from nbclient import NotebookClient
-from nbconvert import HTMLExporter
+from render_html import export_html
 
 HERE = Path(__file__).resolve().parent
 
@@ -36,7 +36,7 @@ def main():
     The original constructor walks every token's bytes separately.
     Tokens share prefixes. Their walks can share computation too.
     """), code("""
-    import hashlib, json, statistics
+    import gzip, hashlib, json, statistics
     from pathlib import Path
     from IPython.display import SVG, display
     from notebook_analysis import plot_results
@@ -44,7 +44,7 @@ def main():
     provenance = json.loads((root/'SOURCE_PROVENANCE.json').read_text())
     for name, expected in provenance['measurements_sha256'].items():
         assert hashlib.sha256((root/name).read_bytes()).hexdigest() == expected
-    datasets = {n: json.loads((root/f'data/{n}.json').read_text()) for n in ['gpt2','qwen','synthetic']}
+    datasets = {n: json.loads(gzip.decompress((root/f'data/{n}.json.gz').read_bytes())) for n in ['gpt2','qwen','synthetic']}
     """, True), md(r"""
     ## Share the walk
 
@@ -97,7 +97,7 @@ def main():
     including preparation, or **99 ms** with the vocabulary trie reused.
     For a three-digit constraint, preparation overwhelms the savings.
     """), code("plot_results(datasets, root)", True), md(r"""
-    Bars are medians of 21 samples on an **i7-12700K**; whiskers are 
+    Bars are medians of 21 samples on an **i7-12700K**; whiskers are
     95% bootstrap intervals. Every variant rebuilds the DFA and index.
     Only the prepared variant reuses the vocabulary trie.
 
@@ -126,7 +126,7 @@ def main():
     Rust 1.90.0 build ran on one pinned logical CPU; frequency was not locked and
     the host was shared. Normalization, equality checks, and counters were outside
     timings. Returned index destruction was excluded; temporary trie destruction
-    was included in the one-off variant. Separate-process repetitions are saved.
+    was included in the one-off variant.
 
     The Qwen trie estimates 20.23 MB of allocated vector payload; this excludes
     allocator metadata, temporary build storage, and traversal scratch. Peak
@@ -137,18 +137,14 @@ def main():
     [Implementation](https://github.com/masonmcbride/outlines-core/blob/trie-prefix-sharing/src/index/trie.rs) ·
     [Tests](https://github.com/masonmcbride/outlines-core/blob/trie-prefix-sharing/tests/trie_equivalence.rs) ·
     [Notebook](Prefix_Sharing.ipynb) · [Reproduce](README.md) ·
-    [Raw Qwen samples](data/qwen.json) · [Source hashes](SOURCE_PROVENANCE.json)
+    [Raw Qwen samples](data/qwen.json.gz) · [Source hashes](SOURCE_PROVENANCE.json)
 
     Based on [Outlines Core `116a7c3`](https://github.com/dottxt-ai/outlines-core/tree/116a7c381b446814fdfc9b2b28bea7ca4f900aae).
     """)]
     notebook = nb.v4.new_notebook(cells=cells, metadata={'kernelspec':{'display_name':'Python 3','language':'python','name':'python3'}})
     NotebookClient(notebook, timeout=180, kernel_name='python3', resources={'metadata':{'path':str(HERE)}}).execute()
     nb.write(notebook, HERE/'Prefix_Sharing.ipynb')
-    exporter = HTMLExporter()
-    exporter.exclude_input = True
-    body, _ = exporter.from_notebook_node(notebook)
-    style = '<style>body{background:white!important}.jp-Notebook{max-width:960px;margin:32px auto!important;padding:0 20px!important}.jp-RenderedHTMLCommon{font:17px/1.65 system-ui!important;color:#26333d}.jp-RenderedHTMLCommon h1{font-size:34px}.jp-RenderedHTMLCommon h2{font-size:23px;margin-top:32px}.jp-InputPrompt,.jp-OutputPrompt{display:none!important}.jp-Cell-inputWrapper{margin-left:0!important}.jp-RenderedImage img,.jp-RenderedSVG svg{max-width:100%;height:auto}summary{cursor:pointer;font-weight:600}details{padding:12px 0;border-top:1px solid #ddd}pre{font-size:13px!important}a{color:#246b8f!important}</style>'
-    (HERE/'index.html').write_text(body.replace('</head>',style+'</head>'))
+    export_html(notebook, HERE/'index.html')
     print('Executed notebook and exported docs/trie/index.html')
 
 

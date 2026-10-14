@@ -1,5 +1,6 @@
 """Normalize pinned ByteLevel tokenizers using the core's CHAR_MAP mapping."""
 import hashlib
+import gzip
 import json
 from pathlib import Path
 
@@ -45,14 +46,32 @@ def normalize(path, eos_token_id, source):
     print(output.name, payload["metadata"]["regular_token_ids"], "regular token IDs")
 
 
+def restore_lockfile(root=None):
+    here = Path(__file__).resolve().parent
+    root = here.parents[1] if root is None else Path(root)
+    provenance = json.loads((here / "SOURCE_PROVENANCE.json").read_text())
+    raw = gzip.decompress((here / "data/Cargo.lock.gz").read_bytes())
+    assert hashlib.sha256(raw).hexdigest() == provenance["rust_source_sha256"]["Cargo.lock"]
+    path = root / "Cargo.lock"
+    if path.exists() and path.read_bytes() != raw:
+        raise ValueError("Refusing to replace a changed Cargo.lock")
+    path.write_bytes(raw)
+
+
 if __name__ == "__main__":
-    import gzip
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--lock-only", action="store_true")
+    args = parser.parse_args()
+    restore_lockfile()
+    if args.lock_only:
+        raise SystemExit(0)
     root = Path(__file__).resolve().parents[2]
     folder = root / "reruns/vocab"
     folder.mkdir(parents=True, exist_ok=True)
     for name, eos in [("gpt2", 50256), ("qwen", 151645)]:
         here = Path(__file__).resolve().parent
-        data = json.loads((here / "data" / (name + ".json")).read_text())
+        data = json.loads(gzip.decompress((here / "data" / (name + ".json.gz")).read_bytes()))
         compressed = here / "vocab" / (name + "-tokenizer.json.gz")
         raw = gzip.decompress(compressed.read_bytes())
         assert hashlib.sha256(raw).hexdigest() == data["vocabulary"]["raw_sha256"]
